@@ -115,3 +115,72 @@
   background: var(--color-accent);
   color: #000;
 }
+
+.whatIfSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.whatIfRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.whatIfLabel {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  min-width: 140px;
+}
+
+.whatIfInput {
+  width: 90px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 4px 7px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+}
+
+.whatIfInput:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.inputError {
+  color: var(--color-error);
+  font-size: 0.75rem;
+}
+
+.projectedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.resetBtn {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.resetBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

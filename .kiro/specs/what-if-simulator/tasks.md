@@ -23,13 +23,13 @@ Add a what-if simulator to ResultsPanel so students can enter hypothetical score
   - Tests: empty map returns structurally identical course; valid score converts RemainingItem to CompletedItem; unmapped items stay as RemainingItems; original course is not mutated.
   - _Requirements: 6.3_
 
-- [ ] 4. Add hypotheticals state and inputs
+- [x] 4. Add hypotheticals state and inputs
   - Add `hypotheticals: Map<string, number>` state.
   - When `whatIfMode` is true, iterate `course.categories` -> `isRemainingItem` items and render a labelled `<input type="number">` for each with empty value and placeholder = required score from `perItemRequired` (1 dp), or "0.0" if absent.
   - Each input updates `hypotheticals` on `onChange`.
   - _Requirements: 1.2, 1.5, 5.1_
 
-- [ ] 5. Compute and display Projected_Result
+- [x] 5. Compute and display Projected_Result
   - In the render: if `whatIfMode`, build a validated hyp map (exclude entries > 2x item max), call `applyHypotheticals(course, validHyp)` then `calcGrades(projectedCourse, course.targetGrade)`.
   - Display `projectedResult.earnedPoints`, `projectedResult.maxAchievable`, and verdict labelled "Projected" beneath the real results.
   - Wrap the projected verdict in `<div aria-live="polite" role="status">`.

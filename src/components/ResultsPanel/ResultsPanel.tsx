@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { GradeResult, Course } from '../../types';
 import { isRemainingItem } from '../../types';
+import { applyHypotheticals } from '../../lib/whatIf';
+import { calcGrades } from '../../lib/grades';
 import styles from './ResultsPanel.module.css';
 
 interface Props {
@@ -28,11 +30,53 @@ function hasRemainingItems(course: Course): boolean {
 
 export default function ResultsPanel({ result, course }: Props) {
   const [whatIfMode, setWhatIfMode] = useState(false);
+  const [hypotheticals, setHypotheticals] = useState<Map<string, string>>(new Map());
+
   const { earnedPoints, currentGrade, maxAchievable, requiredAverage, verdict, perItemRequired } = result;
+
+  // Build valid hyp map (exclude empty/non-numeric and >2x max)
+  const validHyp = new Map<string, number>();
+  const inputErrors = new Map<string, string>();
+
+  if (whatIfMode) {
+    for (const [id, raw] of hypotheticals) {
+      const v = parseFloat(raw);
+      if (raw === '' || isNaN(v)) continue; // silently exclude
+      // find item max
+      let itemMax = 100;
+      for (const cat of course.categories) {
+        for (const item of cat.items) {
+          if (item.id === id && isRemainingItem(item)) {
+            itemMax = item.max ?? 100;
+          }
+        }
+      }
+      if (v > itemMax * 2) {
+        inputErrors.set(id, `Max allowed: ${round1(itemMax * 2)}`);
+      } else {
+        validHyp.set(id, v);
+      }
+    }
+  }
+
+  // Projected result (tasks 4+5)
+  const projectedResult = whatIfMode
+    ? calcGrades(applyHypotheticals(course, validHyp), course.targetGrade)
+    : null;
 
   const verdictClass = verdict === 'Safe' ? styles.safe : verdict === 'AtRisk' ? styles.atRisk : styles.doomed;
   const verdictLabel = verdict === 'Safe' ? 'Safe' : verdict === 'AtRisk' ? 'At Risk' : 'Doomed';
   const verdictIcon = verdict === 'Safe' ? '\u2705' : verdict === 'AtRisk' ? '\u26a0\ufe0f' : '\ud83d\udc80';
+
+  function projVerdictClass(v: string) {
+    return v === 'Safe' ? styles.safe : v === 'AtRisk' ? styles.atRisk : styles.doomed;
+  }
+  function projVerdictLabel(v: string) {
+    return v === 'Safe' ? 'Safe' : v === 'AtRisk' ? 'At Risk' : 'Doomed';
+  }
+  function projVerdictIcon(v: string) {
+    return v === 'Safe' ? '\u2705' : v === 'AtRisk' ? '\u26a0\ufe0f' : '\ud83d\udc80';
+  }
 
   return (
     <section className={styles.panel} aria-label="Grade results">
@@ -73,11 +117,75 @@ export default function ResultsPanel({ result, course }: Props) {
       {hasRemainingItems(course) && (
         <button
           className={styles.whatIfBtn}
-          onClick={() => setWhatIfMode(!whatIfMode)}
+          onClick={() => { setWhatIfMode(!whatIfMode); setHypotheticals(new Map()); }}
           aria-pressed={whatIfMode}
         >
           {whatIfMode ? 'Hide' : 'Show'} what-if simulator
         </button>
+      )}
+
+      {whatIfMode && (
+        <div className={styles.whatIfSection}>
+          <p className={styles.heading}>What-if scores</p>
+          {course.categories.map(cat =>
+            cat.items.filter(isRemainingItem).map(item => {
+              const inputId = `whatif-${item.id}`;
+              const placeholder = round1(
+                perItemRequired.find(p => p.itemId === item.id)?.required ?? 0
+              );
+              const raw = hypotheticals.get(item.id) ?? '';
+              const err = inputErrors.get(item.id);
+              return (
+                <div key={item.id} className={styles.whatIfRow}>
+                  <label htmlFor={inputId} className={styles.whatIfLabel}>
+                    {cat.name} — {item.name}
+                  </label>
+                  <input
+                    id={inputId}
+                    type="number"
+                    min={0}
+                    step={0.1}
+                    className={styles.whatIfInput}
+                    value={raw}
+                    placeholder={placeholder}
+                    aria-invalid={err ? 'true' : undefined}
+                    onChange={e => {
+                      const next = new Map(hypotheticals);
+                      next.set(item.id, e.target.value);
+                      setHypotheticals(next);
+                    }}
+                  />
+                  {err && <span className={styles.inputError} role="alert">{err}</span>}
+                </div>
+              );
+            })
+          )}
+
+          {projectedResult && (
+            <div className={styles.projectedSection}>
+              <p className={styles.heading}>Projected</p>
+              <div className={styles.stats}>
+                <div className={styles.stat}>
+                  <span className={styles.statLabel}>Projected earned pts</span>
+                  <span className={styles.statValue}>{round1(projectedResult.earnedPoints)}%</span>
+                </div>
+                <div className={styles.stat}>
+                  <span className={styles.statLabel}>Projected best grade</span>
+                  <span className={styles.statValue}>{round1(projectedResult.maxAchievable)}%</span>
+                </div>
+              </div>
+              <div
+                aria-live="polite"
+                role="status"
+                className={`${styles.verdict} ${projVerdictClass(projectedResult.verdict)}`}
+                aria-label={`Projected verdict: ${projVerdictLabel(projectedResult.verdict)}`}
+              >
+                <span aria-hidden="true">{projVerdictIcon(projectedResult.verdict)}</span>
+                <span>Projected: {projVerdictLabel(projectedResult.verdict)}</span>
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
       {perItemRequired.length > 0 && (
