@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { GradeResult, Course } from '../../types';
 import styles from './ResultsPanel.module.css';
 
@@ -22,6 +23,7 @@ function getItemName(course: Course, itemId: string): string {
 }
 
 export default function ResultsPanel({ result, course }: Props) {
+  const [whatIfMode, setWhatIfMode] = useState(false);
   const { earnedPoints, currentGrade, maxAchievable, requiredAverage, verdict, perItemRequired } = result;
 
   const verdictClass = verdict === 'Safe' ? styles.safe : verdict === 'AtRisk' ? styles.atRisk : styles.doomed;
@@ -63,6 +65,16 @@ export default function ResultsPanel({ result, course }: Props) {
           }
         </div>
       </div>
+
+      {perItemRequired.length > 0 && (
+        <button
+          className={styles.whatIfBtn}
+          onClick={() => setWhatIfMode(!whatIfMode)}
+          aria-pressed={whatIfMode}
+        >
+          {whatIfMode ? 'Hide' : 'Show'} what-if simulator
+        </button>
+      )}
 
       {perItemRequired.length > 0 && (
         <>
