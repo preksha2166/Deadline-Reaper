@@ -164,3 +164,9 @@
   clip: rect(0,0,0,0);
   white-space: nowrap;
 }
+
+.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #000;
+}

@@ -45,7 +45,7 @@ Add a what-if simulator to ResultsPanel so students can enter hypothetical score
   - Add `.whatIfSection`, `.whatIfInput`, `.projectedSection`, `.resetBtn`, `.inputError` classes to `ResultsPanel.module.css`.
   - _Requirements: 4.1, 4.2_
 
-- [ ] 8. Component tests
+- [x] 8. Component tests
   - Add `src/components/ResultsPanel/ResultsPanel.test.tsx` testing:
     - Toggle button absent when no remaining items.
     - Toggle button present and activates mode when remaining items exist.

@@ -165,7 +165,7 @@ export default function ResultsPanel({ result, course }: Props) {
                       setHypotheticals(next);
                     }}
                   />
-                  {err && <span className={styles.inputError} role="alert">{err}</span>}
+                  {err && <span className={styles.inputError} role="alert" aria-label={err}>{err}</span>}
                 </div>
               );
             })

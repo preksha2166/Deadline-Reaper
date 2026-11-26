@@ -61,7 +61,7 @@ function AddItemForm({ courseId, catId, actions }: {
       <div className={styles.formRow}>
         <button
           type="button"
-          className={`${styles.smallBtn}${mode === 'completed' ? '' : ''}`}
+          className={mode === 'completed' ? `${styles.smallBtn} ${styles.active}` : styles.smallBtn}
           onClick={() => setMode('completed')}
           aria-pressed={mode === 'completed'}
         >
@@ -69,7 +69,7 @@ function AddItemForm({ courseId, catId, actions }: {
         </button>
         <button
           type="button"
-          className={styles.smallBtn}
+          className={mode === 'remaining' ? `${styles.smallBtn} ${styles.active}` : styles.smallBtn}
           onClick={() => setMode('remaining')}
           aria-pressed={mode === 'remaining'}
         >
