@@ -12,13 +12,13 @@ Add a what-if simulator to ResultsPanel so students can enter hypothetical score
   - When `whatIfMode` is false, render nothing extra.
   - _Requirements: 1.1, 1.3, 1.4, 1.5_
 
-- [ ] 2. Implement `applyHypotheticals` in `src/lib/whatIf.ts`
+- [x] 2. Implement `applyHypotheticals` in `src/lib/whatIf.ts`
   - New file `src/lib/whatIf.ts` exporting `applyHypotheticals(course: Course, hyp: Map<string, number>): Course`.
   - Deep-copies course; for each RemainingItem whose id is in `hyp`, replaces it with a CompletedItem `{ id, name, score: hyp.get(id)!, max: item.max ?? 100 }`.
   - Pure function: no React imports, does not mutate the input.
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 3. Unit tests for `applyHypotheticals`
+- [x] 3. Unit tests for `applyHypotheticals`
   - New file `src/lib/whatIf.test.ts`.
   - Tests: empty map returns structurally identical course; valid score converts RemainingItem to CompletedItem; unmapped items stay as RemainingItems; original course is not mutated.
   - _Requirements: 6.3_

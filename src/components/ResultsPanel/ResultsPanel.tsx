@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { GradeResult, Course } from '../../types';
+import { isRemainingItem } from '../../types';
 import styles from './ResultsPanel.module.css';
 
 interface Props {
@@ -13,7 +14,6 @@ function round1(n: number): string {
 
 function getItemName(course: Course, itemId: string): string {
   for (const cat of course.categories) {
-    // Handle the empty-category sentinel
     if (itemId === cat.id + '__empty') return cat.name + ' (no items)';
     for (const item of cat.items) {
       if (item.id === itemId) return item.name;
@@ -22,13 +22,17 @@ function getItemName(course: Course, itemId: string): string {
   return itemId;
 }
 
+function hasRemainingItems(course: Course): boolean {
+  return course.categories.some(cat => cat.items.some(isRemainingItem));
+}
+
 export default function ResultsPanel({ result, course }: Props) {
   const [whatIfMode, setWhatIfMode] = useState(false);
   const { earnedPoints, currentGrade, maxAchievable, requiredAverage, verdict, perItemRequired } = result;
 
   const verdictClass = verdict === 'Safe' ? styles.safe : verdict === 'AtRisk' ? styles.atRisk : styles.doomed;
   const verdictLabel = verdict === 'Safe' ? 'Safe' : verdict === 'AtRisk' ? 'At Risk' : 'Doomed';
-  const verdictIcon = verdict === 'Safe' ? '✅' : verdict === 'AtRisk' ? '⚠️' : '💀';
+  const verdictIcon = verdict === 'Safe' ? '\u2705' : verdict === 'AtRisk' ? '\u26a0\ufe0f' : '\ud83d\udc80';
 
   return (
     <section className={styles.panel} aria-label="Grade results">
@@ -66,7 +70,7 @@ export default function ResultsPanel({ result, course }: Props) {
         </div>
       </div>
 
-      {perItemRequired.length > 0 && (
+      {hasRemainingItems(course) && (
         <button
           className={styles.whatIfBtn}
           onClick={() => setWhatIfMode(!whatIfMode)}
