@@ -34,7 +34,7 @@ export default function ResultsPanel({ result, course }: Props) {
 
   const { earnedPoints, currentGrade, maxAchievable, requiredAverage, verdict, perItemRequired } = result;
 
-  // Build valid hyp map (exclude empty/non-numeric and >2x max)
+  // Build valid hyp map (exclude empty/non-numeric, negative, and >2x max)
   const validHyp = new Map<string, number>();
   const inputErrors = new Map<string, string>();
 
@@ -51,7 +51,9 @@ export default function ResultsPanel({ result, course }: Props) {
           }
         }
       }
-      if (v > itemMax * 2) {
+      if (v < 0) {
+        inputErrors.set(id, 'Score cannot be negative');
+      } else if (v > itemMax * 2) {
         inputErrors.set(id, `Max allowed: ${round1(itemMax * 2)}`);
       } else {
         validHyp.set(id, v);
@@ -59,7 +61,7 @@ export default function ResultsPanel({ result, course }: Props) {
     }
   }
 
-  // Projected result (tasks 4+5)
+  // Projected result
   const projectedResult = whatIfMode
     ? calcGrades(applyHypotheticals(course, validHyp), course.targetGrade)
     : null;
@@ -126,7 +128,16 @@ export default function ResultsPanel({ result, course }: Props) {
 
       {whatIfMode && (
         <div className={styles.whatIfSection}>
-          <p className={styles.heading}>What-if scores</p>
+          <div className={styles.whatIfHeader}>
+            <p className={styles.heading}>What-if scores</p>
+            <button
+              className={styles.resetBtn}
+              onClick={() => setHypotheticals(new Map())}
+            >
+              Reset
+            </button>
+          </div>
+
           {course.categories.map(cat =>
             cat.items.filter(isRemainingItem).map(item => {
               const inputId = `whatif-${item.id}`;
@@ -138,12 +149,11 @@ export default function ResultsPanel({ result, course }: Props) {
               return (
                 <div key={item.id} className={styles.whatIfRow}>
                   <label htmlFor={inputId} className={styles.whatIfLabel}>
-                    {cat.name} — {item.name}
+                    {cat.name} {'\u2014'} {item.name}
                   </label>
                   <input
                     id={inputId}
                     type="number"
-                    min={0}
                     step={0.1}
                     className={styles.whatIfInput}
                     value={raw}

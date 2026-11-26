@@ -35,12 +35,12 @@ Add a what-if simulator to ResultsPanel so students can enter hypothetical score
   - Wrap the projected verdict in `<div aria-live="polite" role="status">`.
   - _Requirements: 2.1, 2.2, 2.3, 5.2_
 
-- [ ] 6. Input validation
+- [x] 6. Input validation
   - On render, for each entry in `hypotheticals`: if value > 2x item max, mark that input invalid, show inline error, and exclude it from the validated hyp map.
   - Empty/non-numeric inputs remain absent from `hypotheticals` (item stays remaining).
   - _Requirements: 3.1, 3.2, 3.3_
 
-- [ ] 7. Reset button and CSS
+- [x] 7. Reset button and CSS
   - When `whatIfMode` is true, render a "Reset" button that calls `setHypotheticals(new Map())`.
   - Add `.whatIfSection`, `.whatIfInput`, `.projectedSection`, `.resetBtn`, `.inputError` classes to `ResultsPanel.module.css`.
   - _Requirements: 4.1, 4.2_
