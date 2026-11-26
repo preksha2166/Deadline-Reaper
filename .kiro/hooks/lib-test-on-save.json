@@ -1,10 +1,14 @@
 {
-  version: v1,
-  hooks: [
+  "version": "v1",
+  "hooks": [
     {
-      name: run-lib-tests-on-save,
-      trigger: PostFileSave,
-      matcher: src/lib/,
-      action: {
-        type: command,
-        command: npx
+      "name": "run-lib-tests-on-save",
+      "trigger": "PostFileSave",
+      "matcher": "src/lib/",
+      "action": {
+        "type": "command",
+        "command": "npx vitest --run src/lib"
+      }
+    }
+  ]
+}
