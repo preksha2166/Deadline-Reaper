@@ -1,0 +1,55 @@
+:root {
+  --color-bg: hsl(272, 60%, 8%);
+  --color-bg-panel: hsl(272, 50%, 13%);
+  --color-bg-card: hsl(272, 40%, 18%);
+  --color-text: hsl(272, 60%, 92%);
+  --color-text-muted: hsl(272, 20%, 65%);
+  --color-accent: hsl(28, 100%, 50%);
+  --color-accent-hover: hsl(28, 100%, 60%);
+  --color-safe: hsl(135, 60%, 42%);
+  --color-safe-bg: hsl(135, 60%, 12%);
+  --color-at-risk: hsl(10, 85%, 55%);
+  --color-at-risk-bg: hsl(10, 85%, 12%);
+  --color-doomed: hsl(10, 85%, 55%);
+  --color-doomed-bg: hsl(10, 85%, 12%);
+  --color-warning: hsl(42, 100%, 55%);
+  --color-border: hsl(272, 30%, 28%);
+  --color-error: hsl(0, 85%, 60%);
+  --radius: 6px;
+  --gap: 1rem;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+input, select, textarea {
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

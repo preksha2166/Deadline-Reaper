@@ -25,6 +25,7 @@ inclusion: always
 - Function components and hooks only. No class components.
 - No extra runtime dependencies without a clear reason. Prefer small, built-in solutions (for example, `Intl.DateTimeFormat` rather than a date library).
 - Keep the app accessible: semantic HTML, labelled inputs, keyboard navigable, WCAG AA colour contrast.
+- Never write files with PowerShell Set-Content/Out-File; use the file-write tool so files are UTF-8 without BOM.
 
 ## Commands
 - `npm install`: install dependencies

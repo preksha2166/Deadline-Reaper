@@ -1,0 +1,10 @@
+{
+  version: v1,
+  hooks: [
+    {
+      name: run-lib-tests-on-save,
+      trigger: PostFileSave,
+      matcher: src/lib/,
+      action: {
+        type: command,
+        command: npx
